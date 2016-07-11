@@ -25,7 +25,7 @@
 
 set
 
-JAVA_1_7=$1
+JAVA_1_8=$1
 GATK_DIR=$2
 CORE_PATH=$3
 CODING_BED=$4
@@ -42,7 +42,7 @@ BARCODE_2D=${SM_TAG#*@}
 
 START_DOC_CODING=`date '+%s'`
 
-$JAVA_1_7/java -jar $GATK_DIR/GenomeAnalysisTK.jar \
+$JAVA_1_8/java -jar $GATK_DIR/GenomeAnalysisTK.jar \
 -T DepthOfCoverage \
 -R $REF_GENOME \
 -I $CORE_PATH/$PROJECT/BAM/$SM_TAG".bam" \
@@ -66,7 +66,7 @@ HOSTNAME=`hostname`
 echo $SM_TAG"_"$PROJECT",H.001,DOC_CODING,"$HOSTNAME","$START_DOC_CODING","$END_DOC_CODING \
 >> $CORE_PATH/$PROJECT/REPORTS/$PROJECT".WALL.CLOCK.TIMES.csv"
 
-echo $JAVA_1_7/java -jar $GATK_DIR/GenomeAnalysisTK.jar \
+echo $JAVA_1_8/java -jar $GATK_DIR/GenomeAnalysisTK.jar \
 -T DepthOfCoverage \
 -R $REF_GENOME \
 -I $CORE_PATH/$PROJECT/BAM/$SM_TAG".bam" \

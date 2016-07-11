@@ -25,7 +25,7 @@
 
 set
 
-JAVA_1_7=$1
+JAVA_1_8=$1
 GATK_DIR=$2
 CORE_PATH=$3
 
@@ -37,7 +37,7 @@ REF_GENOME=$5
 
 START_FILTER_COHORT_VARIANT_ONLY_PASS=`date '+%s'`
 
-$JAVA_1_7/java -jar $GATK_DIR/GenomeAnalysisTK.jar \
+$JAVA_1_8/java -jar $GATK_DIR/GenomeAnalysisTK.jar \
 -T SelectVariants \
 --disable_auto_index_creation_and_locking_when_reading_rods \
 -R $REF_GENOME \
@@ -53,7 +53,7 @@ HOSTNAME=`hostname`
 echo $PROJECT",S.001,FILTER_COHORT_VARIANT_ONLY_PASS,"$HOSTNAME","$START_FILTER_COHORT_VARIANT_ONLY_PASS","$END_FILTER_COHORT_VARIANT_ONLY_PASS \
 >> $CORE_PATH/$PROJECT/REPORTS/$PROJECT".WALL.CLOCK.TIMES.csv"
 
-echo $JAVA_1_7/java -jar $GATK_DIR/GenomeAnalysisTK.jar \
+echo $JAVA_1_8/java -jar $GATK_DIR/GenomeAnalysisTK.jar \
 -T SelectVariants \
 --disable_auto_index_creation_and_locking_when_reading_rods \
 -R $REF_GENOME \

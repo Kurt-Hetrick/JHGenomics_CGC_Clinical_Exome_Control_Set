@@ -9,14 +9,11 @@ PED_FILE=$2
 
 SCRIPT_DIR="/isilon/sequencing/Kurt/GIT_REPO/JHGenomics_CGC_Clinical_Exome_Control_Set/scripts"
 
-JAVA_1_7="/isilon/sequencing/Kurt/Programs/Java/jdk1.7.0_25/bin"
 JAVA_1_8="/isilon/sequencing/Kurt/Programs/Java/jdk1.8.0_73/bin"
 CORE_PATH="/isilon/sequencing/Seq_Proj/"
 BWA_DIR="/isilon/sequencing/Kurt/Programs/BWA/bwa-0.7.8"
 PICARD_DIR="/isilon/sequencing/Kurt/Programs/Picard/picard-tools-2.1.1"
-# PICARD_DIR="/isilon/sequencing/VITO/Programs/picard/picard-tools-1.141"
-GATK_DIR="/isilon/sequencing/CIDRSeqSuiteSoftware/gatk/GATK_3/GenomeAnalysisTK-3.5-0"
-# GATK_DIR="/isilon/sequencing/CIDRSeqSuiteSoftware/gatk/GATK_3/GenomeAnalysisTK-3.3-0"
+GATK_DIR="/isilon/sequencing/CIDRSeqSuiteSoftware/gatk/GATK_3/GenomeAnalysisTK-3.6"
 VERIFY_DIR="/isilon/sequencing/Kurt/Programs/VerifyBamID/verifyBamID_20120620/bin/"
 GENE_LIST="/isilon/sequencing/CIDRSeqSuiteSoftware/RELEASES/5.0.0/aux_files/RefSeqGene.GRCh37.Ready.txt"
 VERIFY_VCF="/isilon/sequencing/CIDRSeqSuiteSoftware/RELEASES/5.0.0/aux_files/Omni25_genotypes_1525_samples_v2.b37.PASS.ALL.sites.vcf"
@@ -165,7 +162,7 @@ print "qsub","-N","D.01_REALIGNER_TARGET_CREATOR_"$2"_"$1,\
 "-hold_jid","C.01_MARK_DUPLICATES_"$2"_"$1,\
 "-o","'$CORE_PATH'/"$1"/LOGS/"$2"_"$1".REALIGNER_TARGET_CREATOR.log",\
 "'$SCRIPT_DIR'""/D.01_REALIGNER_TARGET_CREATOR.sh",\
-"'$JAVA_1_7'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3,INDEL[1],INDEL[2]"\n""sleep 1s"}'
+"'$JAVA_1_8'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3,INDEL[1],INDEL[2]"\n""sleep 1s"}'
 
 # With the list generated above walk through the BAM file and realign where necessary
 # Write out a new bam file
@@ -179,7 +176,7 @@ print "qsub","-N","E.01_INDEL_REALIGNER_"$2"_"$1,\
 "-hold_jid","D.01_REALIGNER_TARGET_CREATOR_"$2"_"$1,\
 "-o","'$CORE_PATH'/"$1"/LOGS/"$2"_"$1".INDEL_REALIGNER.log",\
 "'$SCRIPT_DIR'""/E.01_INDEL_REALIGNER.sh",\
-"'$JAVA_1_7'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3,INDEL[1],INDEL[2]"\n""sleep 1s"}'
+"'$JAVA_1_8'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3,INDEL[1],INDEL[2]"\n""sleep 1s"}'
 
 # Run Base Quality Score Recalibration
 
@@ -192,7 +189,7 @@ print "qsub","-N","F.01_PERFORM_BQSR_"$2"_"$1,\
 "-hold_jid","E.01_INDEL_REALIGNER_"$2"_"$1,\
 "-o","'$CORE_PATH'/"$1"/LOGS/"$2"_"$1".PERFORM_BQSR.log",\
 "'$SCRIPT_DIR'""/F.01_PERFORM_BQSR.sh",\
-"'$JAVA_1_7'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3,INDEL[1],INDEL[2],$5,$6"\n""sleep 1s"}'
+"'$JAVA_1_8'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3,INDEL[1],INDEL[2],$5,$6"\n""sleep 1s"}'
 
 # write Final Bam file
 
@@ -205,7 +202,7 @@ print "qsub","-N","G.01_FINAL_BAM_"$2"_"$1,\
 "-hold_jid","F.01_PERFORM_BQSR_"$2"_"$1,\
 "-o","'$CORE_PATH'/"$1"/LOGS/"$2"_"$1".FINAL_BAM.log",\
 "'$SCRIPT_DIR'""/G.01_FINAL_BAM.sh",\
-"'$JAVA_1_7'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3"\n""sleep 1s"}'
+"'$JAVA_1_8'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3"\n""sleep 1s"}'
 
 ##### ALL H.00X SERIES OF SCRIPTS CAN BE RUN IN PARALLEL SINCE THEY ARE DEPENDENT ON FINAL BAM FILE GENERATION #####
 
@@ -220,7 +217,7 @@ print "qsub","-N","H.01_HAPLOTYPE_CALLER_"$1"_"$2,\
 "-hold_jid","G.01_FINAL_BAM_"$2"_"$1,\
 "-o","'$CORE_PATH'/"$1"/LOGS/"$2"_"$1".HAPLOTYPE_CALLER.log",\
 "'$SCRIPT_DIR'""/H.01_HAPLOTYPE_CALLER.sh",\
-"'$JAVA_1_7'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3,$4"\n""sleep 1s"}'
+"'$JAVA_1_8'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3,$4"\n""sleep 1s"}'
 
 # Run POST BQSR TABLE
 
@@ -233,7 +230,7 @@ print "qsub","-N","H.02_POST_BQSR_TABLE_"$2"_"$1,\
 "-hold_jid","G.01_FINAL_BAM_"$2"_"$1,\
 "-o","'$CORE_PATH'/"$1"/LOGS/"$2"_"$1".POST_BQSR_TABLE.log",\
 "'$SCRIPT_DIR'""/H.02_POST_BQSR_TABLE.sh",\
-"'$JAVA_1_7'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3,INDEL[1],INDEL[2],$5"\n""sleep 1s"}'
+"'$JAVA_1_8'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3,INDEL[1],INDEL[2],$5"\n""sleep 1s"}'
 
 # Run ANALYZE COVARIATES
 
@@ -246,7 +243,7 @@ print "qsub","-N","H.02-A.01_ANALYZE_COVARIATES_"$2"_"$1,\
 "-hold_jid","H.02_POST_BQSR_TABLE_"$2"_"$1,\
 "-o","'$CORE_PATH'/"$1"/LOGS/"$2"_"$1".ANALYZE_COVARIATES.log",\
 "'$SCRIPT_DIR'""/H.02-A.01_ANALYZE_COVARIATES.sh",\
-"'$JAVA_1_7'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3"\n""sleep 1s"}'
+"'$JAVA_1_8'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3"\n""sleep 1s"}'
 
 # RUN DOC CODING PLUS 10 BP FLANKS
 
@@ -259,7 +256,7 @@ print "qsub","-N","H.03_DOC_CODING_10bpFLANKS_"$2"_"$1,\
 "-hold_jid","G.01_FINAL_BAM_"$2"_"$1,\
 "-o","'$CORE_PATH'/"$1"/LOGS/"$2"_"$1".DOC_CODING_10bpFLANKS.log",\
 "'$SCRIPT_DIR'""/H.03_DOC_CODING_10bpFLANKS.sh",\
-"'$JAVA_1_7'","'$GATK_DIR'","'$CORE_PATH'","'$CODING_BED'","'$GENE_LIST'",$1,$2,$3"\n""sleep 1s"}'
+"'$JAVA_1_8'","'$GATK_DIR'","'$CORE_PATH'","'$CODING_BED'","'$GENE_LIST'",$1,$2,$3"\n""sleep 1s"}'
 
 # RUN DOC TARGET BED
 
@@ -272,7 +269,7 @@ print "qsub","-N","H.05_DOC_TARGET_BED_"$2"_"$1,\
 "-hold_jid","G.01_FINAL_BAM_"$2"_"$1,\
 "-o","'$CORE_PATH'/"$1"/LOGS/"$2"_"$1".DOC_TARGET_BED.log",\
 "'$SCRIPT_DIR'""/H.05_DOC_TARGET_BED.sh",\
-"'$JAVA_1_7'","'$GATK_DIR'","'$CORE_PATH'","'$GENE_LIST'",$1,$2,$3,$4"\n""sleep 1s"}'
+"'$JAVA_1_8'","'$GATK_DIR'","'$CORE_PATH'","'$GENE_LIST'",$1,$2,$3,$4"\n""sleep 1s"}'
 
 # RUN ANEUPLOIDY_CHECK AFTER DOC TARGET BED FINISHES
 
@@ -324,7 +321,7 @@ print "qsub","-N","H.08_SELECT_VERIFYBAMID_VCF_"$2"_"$1,\
 "-hold_jid","G.01_FINAL_BAM_"$2"_"$1,\
 "-o","'$CORE_PATH'/"$1"/LOGS/"$2"_"$1".SELECT_VERIFYBAMID_VCF.log",\
 "'$SCRIPT_DIR'""/H.08_SELECT_VERIFYBAMID_VCF.sh",\
-"'$JAVA_1_7'","'$GATK_DIR'","'$CORE_PATH'","'$VERIFY_VCF'",$1,$2,$3,$4"\n""sleep 1s"}'
+"'$JAVA_1_8'","'$GATK_DIR'","'$CORE_PATH'","'$VERIFY_VCF'",$1,$2,$3,$4"\n""sleep 1s"}'
 
 # RUN VERIFYBAMID ALL
 
@@ -356,7 +353,7 @@ qsub \
 -hold_jid G.01_FINAL_BAM_${SAMPLE_INFO_ARRAY_VERIFY_BAM[2]}_${SAMPLE_INFO_ARRAY_VERIFY_BAM[0]} \
 -o $CORE_PATH/${SAMPLE_INFO_ARRAY_VERIFY_BAM[0]}/LOGS/${SAMPLE_INFO_ARRAY_VERIFY_BAM[2]}_${SAMPLE_INFO_ARRAY_VERIFY_BAM[0]}.SELECT_VERIFYBAMID_chr$CHROMOSOME.log \
 $SCRIPT_DIR/H.09_SELECT_VERIFYBAMID_VCF_CHR.sh \
-$JAVA_1_7 $GATK_DIR $CORE_PATH $VERIFY_VCF \
+$JAVA_1_8 $GATK_DIR $CORE_PATH $VERIFY_VCF \
 ${SAMPLE_INFO_ARRAY_VERIFY_BAM[0]} ${SAMPLE_INFO_ARRAY_VERIFY_BAM[2]} ${SAMPLE_INFO_ARRAY_VERIFY_BAM[3]} \
 ${SAMPLE_INFO_ARRAY_VERIFY_BAM[4]} $CHROMOSOME
 }

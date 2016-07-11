@@ -9,14 +9,11 @@ PED_FILE=$2
 
 SCRIPT_DIR="/isilon/sequencing/Kurt/GIT_REPO/JHGenomics_CGC_Clinical_Exome_Control_Set/scripts"
 
-JAVA_1_7="/isilon/sequencing/Kurt/Programs/Java/jdk1.7.0_25/bin"
 JAVA_1_8="/isilon/sequencing/Kurt/Programs/Java/jdk1.8.0_73/bin"
 CORE_PATH="/isilon/sequencing/Seq_Proj/"
 BWA_DIR="/isilon/sequencing/Kurt/Programs/BWA/bwa-0.7.8"
 PICARD_DIR="/isilon/sequencing/Kurt/Programs/Picard/picard-tools-2.1.1"
-# PICARD_DIR="/isilon/sequencing/VITO/Programs/picard/picard-tools-1.141"
-GATK_DIR="/isilon/sequencing/CIDRSeqSuiteSoftware/gatk/GATK_3/GenomeAnalysisTK-3.5-0"
-# GATK_DIR="/isilon/sequencing/CIDRSeqSuiteSoftware/gatk/GATK_3/GenomeAnalysisTK-3.3-0"
+GATK_DIR="/isilon/sequencing/CIDRSeqSuiteSoftware/gatk/GATK_3/GenomeAnalysisTK-3.6"
 VERIFY_DIR="/isilon/sequencing/Kurt/Programs/VerifyBamID/verifyBamID_20120620/bin/"
 GENE_LIST="/isilon/sequencing/CIDRSeqSuiteSoftware/RELEASES/5.0.0/aux_files/RefSeqGene.GRCh37.Ready.txt"
 VERIFY_VCF="/isilon/sequencing/CIDRSeqSuiteSoftware/RELEASES/5.0.0/aux_files/Omni25_genotypes_1525_samples_v2.b37.PASS.ALL.sites.vcf"
@@ -124,7 +121,7 @@ awk 'BEGIN {OFS="\t"} {print $1,$12,$17}' \
 {print "qsub","-N","I.01_GENOTYPE_GVCF_"$1,\
 "-o","'$CORE_PATH'/"$1"/LOGS/"$1".GENOTYPE_GVCF.log",\
 "'$SCRIPT_DIR'""/I.01_GENOTYPE_GVCF.sh",\
-"'$JAVA_1_7'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3"\n""sleep 3s"}'
+"'$JAVA_1_8'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3"\n""sleep 3s"}'
 
 ### Run Variant Recalibrator for the SNP model, this is done in parallel with the INDEL model
 
@@ -136,7 +133,7 @@ awk 'BEGIN {OFS="\t"} {print $1,$12}' \
 "-hold_jid","I.01_GENOTYPE_GVCF_"$1,\
 "-o","'$CORE_PATH'/"$1"/LOGS/"$1".VARIANT_RECALIBRATOR_SNP.log",\
 "'$SCRIPT_DIR'""/J.01_VARIANT_RECALIBRATOR_SNP.sh",\
-"'$JAVA_1_7'","'$GATK_DIR'","'$CORE_PATH'",$1,$2"\n""sleep 3s"}'
+"'$JAVA_1_8'","'$GATK_DIR'","'$CORE_PATH'",$1,$2"\n""sleep 3s"}'
 
 ### Run Variant Recalibrator for the INDEL model, this is done in parallel with the SNP model
 
@@ -148,7 +145,7 @@ awk 'BEGIN {OFS="\t"} {print $1,$12}' \
 "-hold_jid","I.01_GENOTYPE_GVCF_"$1,\
 "-o","'$CORE_PATH'/"$1"/LOGS/"$1".VARIANT_RECALIBRATOR_INDEL.log",\
 "'$SCRIPT_DIR'""/J.02_VARIANT_RECALIBRATOR_INDEL.sh",\
-"'$JAVA_1_7'","'$GATK_DIR'","'$CORE_PATH'",$1,$2"\n""sleep 3s"}'
+"'$JAVA_1_8'","'$GATK_DIR'","'$CORE_PATH'",$1,$2"\n""sleep 3s"}'
 
 ### Run Apply Recalbration with the SNP model to the VCF file
 
@@ -160,7 +157,7 @@ awk 'BEGIN {OFS="\t"} {print $1,$12}' \
 "-hold_jid","J.01_VARIANT_RECALIBRATOR_SNP_"$1",""J.02_VARIANT_RECALIBRATOR_INDEL_"$1,\
 "-o","'$CORE_PATH'/"$1"/LOGS/"$1".APPLY_RECALIBRATION_SNP.log",\
 "'$SCRIPT_DIR'""/K.01_APPLY_RECALIBRATION_SNP.sh",\
-"'$JAVA_1_7'","'$GATK_DIR'","'$CORE_PATH'",$1,$2"\n""sleep 3s"}'
+"'$JAVA_1_8'","'$GATK_DIR'","'$CORE_PATH'",$1,$2"\n""sleep 3s"}'
 
 ### Run Apply Recalibration with the INDEL model to the VCF file.
 
@@ -172,7 +169,7 @@ awk 'BEGIN {OFS="\t"} {print $1,$12}' \
 "-hold_jid","K.01_APPLY_RECALIBRATION_SNP_"$1,\
 "-o","'$CORE_PATH'/"$1"/LOGS/"$1".APPLY_RECALIBRATION_INDEL.log",\
 "'$SCRIPT_DIR'""/L.01_APPLY_RECALIBRATION_INDEL.sh",\
-"'$JAVA_1_7'","'$GATK_DIR'","'$CORE_PATH'",$1,$2"\n""sleep 3s"}'
+"'$JAVA_1_8'","'$GATK_DIR'","'$CORE_PATH'",$1,$2"\n""sleep 3s"}'
 
 ### Add all possible GATK annotations to the VCF file.
 
@@ -184,7 +181,7 @@ awk 'BEGIN {OFS="\t"} {print $1,$12}' \
 "-hold_jid","L.01_APPLY_RECALIBRATION_INDEL_"$1,\
 "-o","'$CORE_PATH'/"$1"/LOGS/"$1".VARIANT_ANNOTATOR.log",\
 "'$SCRIPT_DIR'""/P.01_VARIANT_ANNOTATOR.sh",\
-"'$JAVA_1_7'","'$GATK_DIR'","'$CORE_PATH'","'$PED_FILE'",$1,$2"\n""sleep 3s"}'
+"'$JAVA_1_8'","'$GATK_DIR'","'$CORE_PATH'","'$PED_FILE'",$1,$2"\n""sleep 3s"}'
 
 ##### DOING VCF BREAKOUTS #####
 
@@ -200,7 +197,7 @@ awk 'BEGIN {OFS="\t"} {print $1,$12}' \
 "-hold_jid","P.01_VARIANT_ANNOTATOR_"$1,\
 "-o","'$CORE_PATH'/"$1"/LOGS/"$1".FILTER_COHORT_VARIANT_ONLY.log",\
 "'$SCRIPT_DIR'""/S.01_FILTER_COHORT_VARIANT_ONLY.sh",\
-"'$JAVA_1_7'","'$GATK_DIR'","'$CORE_PATH'",$1,$2"\n""sleep 3s"}'
+"'$JAVA_1_8'","'$GATK_DIR'","'$CORE_PATH'",$1,$2"\n""sleep 3s"}'
 
 # FILTER TO JUST PASSING VARIANT SITES
 
@@ -212,7 +209,7 @@ awk 'BEGIN {OFS="\t"} {print $1,$12}' \
 "-hold_jid","P.01_VARIANT_ANNOTATOR_"$1,\
 "-o","'$CORE_PATH'/"$1"/LOGS/"$1".FILTER_COHORT_VARIANT_ONLY_PASS.log",\
 "'$SCRIPT_DIR'""/S.02_FILTER_COHORT_VARIANT_ONLY_PASS.sh",\
-"'$JAVA_1_7'","'$GATK_DIR'","'$CORE_PATH'",$1,$2"\n""sleep 3s"}'
+"'$JAVA_1_8'","'$GATK_DIR'","'$CORE_PATH'",$1,$2"\n""sleep 3s"}'
 
 ### SUBSETTING TO SAMPLE VCFS ###
 
@@ -226,7 +223,7 @@ awk 'BEGIN {OFS="\t"} {print $1,$8,$12}' \
 "-hold_jid","P.01_VARIANT_ANNOTATOR_"$1,\
 "-o","'$CORE_PATH'/"$1"/LOGS/"$2"_"$1".FILTER_TO_ALL_SITES.log",\
 "'$SCRIPT_DIR'""/S.06_FILTER_TO_SAMPLE_ALL_SITES.sh",\
-"'$JAVA_1_7'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3"\n""sleep 3s"}'
+"'$JAVA_1_8'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3"\n""sleep 3s"}'
 
 ## SUBSET TO SAMPLE VARIANTS ONLY 
 
@@ -238,7 +235,7 @@ awk 'BEGIN {OFS="\t"} {print $1,$8,$12}' \
 "-hold_jid","P.01_VARIANT_ANNOTATOR_"$1,\
 "-o","'$CORE_PATH'/"$1"/LOGS/"$2"_"$1".FILTER_TO_VARIANTS.log",\
 "'$SCRIPT_DIR'""/S.07_FILTER_TO_SAMPLE_VARIANTS.sh",\
-"'$JAVA_1_7'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3"\n""sleep 3s"}'
+"'$JAVA_1_8'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3"\n""sleep 3s"}'
 
 ## SUBSET TO SAMPLE PASSING VARIANTS
 
@@ -250,7 +247,7 @@ awk 'BEGIN {OFS="\t"} {print $1,$8,$12}' \
 "-hold_jid","P.01_VARIANT_ANNOTATOR_"$1,\
 "-o","'$CORE_PATH'/"$1"/LOGS/"$2"_"$1".FILTER_TO_VARIANTS_PASS.log",\
 "'$SCRIPT_DIR'""/S.08_FILTER_TO_SAMPLE_VARIANTS_PASS.sh",\
-"'$JAVA_1_7'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3"\n""sleep 3s"}'
+"'$JAVA_1_8'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3"\n""sleep 3s"}'
 
 ## SUBSET TO SAMPLE PASSING SNVS
 
@@ -262,7 +259,7 @@ awk 'BEGIN {OFS="\t"} {print $1,$8,$12}' \
 "-hold_jid","P.01_VARIANT_ANNOTATOR_"$1,\
 "-o","'$CORE_PATH'/"$1"/LOGS/"$2"_"$1".FILTER_TO_SNV_ONLY_PASS.log",\
 "'$SCRIPT_DIR'""/S.09_FILTER_TO_SAMPLE_SNV_ONLY_PASS.sh",\
-"'$JAVA_1_7'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3"\n""sleep 3s"}'
+"'$JAVA_1_8'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3"\n""sleep 3s"}'
 
 ## SUBSET TO SAMPLE PASSING INDELS
 
@@ -274,7 +271,7 @@ awk 'BEGIN {OFS="\t"} {print $1,$8,$12}' \
 "-hold_jid","P.01_VARIANT_ANNOTATOR_"$1,\
 "-o","'$CORE_PATH'/"$1"/LOGS/"$2"_"$1".FILTER_TO_INDEL_ONLY_PASS.log",\
 "'$SCRIPT_DIR'""/S.10_FILTER_TO_SAMPLE_INDEL_ONLY_PASS.sh",\
-"'$JAVA_1_7'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3"\n""sleep 3s"}'
+"'$JAVA_1_8'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3"\n""sleep 3s"}'
 
 ## SUBSET TO SAMPLE PASSING MIXED
 
@@ -286,7 +283,7 @@ awk 'BEGIN {OFS="\t"} {print $1,$8,$12}' \
 "-hold_jid","P.01_VARIANT_ANNOTATOR_"$1,\
 "-o","'$CORE_PATH'/"$1"/LOGS/"$2"_"$1".FILTER_TO_MIXED_ONLY_PASS.log",\
 "'$SCRIPT_DIR'""/S.11_FILTER_TO_SAMPLE_MIXED_ONLY_PASS.sh",\
-"'$JAVA_1_7'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3"\n""sleep 3s"}'
+"'$JAVA_1_8'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3"\n""sleep 3s"}'
 
 ## SUBSET TO TARGET SNV ONLY PASS
 
@@ -298,7 +295,7 @@ awk 'BEGIN {OFS="\t"} {print $1,$8,$12,$16}' \
 "-hold_jid","P.01_VARIANT_ANNOTATOR_"$1,\
 "-o","'$CORE_PATH'/"$1"/LOGS/"$2"_"$1".FILTER_TO_TARGET_SNV_ONLY_PASS.log",\
 "'$SCRIPT_DIR'""/S.12_FILTER_TO_SAMPLE_TARGET_SNV_ONLY_PASS.sh",\
-"'$JAVA_1_7'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3,$4"\n""sleep 3s"}'
+"'$JAVA_1_8'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3,$4"\n""sleep 3s"}'
 
 ## SUBSET TO TARGET INDEL ONLY PASS
 
@@ -310,7 +307,7 @@ awk 'BEGIN {OFS="\t"} {print $1,$8,$12,$16}' \
 "-hold_jid","P.01_VARIANT_ANNOTATOR_"$1,\
 "-o","'$CORE_PATH'/"$1"/LOGS/"$2"_"$1".FILTER_TO_TARGET_INDEL_ONLY_PASS.log",\
 "'$SCRIPT_DIR'""/S.13_FILTER_TO_SAMPLE_TARGET_INDEL_ONLY_PASS.sh",\
-"'$JAVA_1_7'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3,$4"\n""sleep 3s"}'
+"'$JAVA_1_8'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3,$4"\n""sleep 3s"}'
 
 ## SUBSET TO TARGET MIXED ONLY PASS
 
@@ -322,7 +319,7 @@ awk 'BEGIN {OFS="\t"} {print $1,$8,$12,$16}' \
 "-hold_jid","P.01_VARIANT_ANNOTATOR_"$1,\
 "-o","'$CORE_PATH'/"$1"/LOGS/"$2"_"$1".FILTER_TO_TARGET_MIXED_ONLY_PASS.log",\
 "'$SCRIPT_DIR'""/S.14_FILTER_TO_SAMPLE_TARGET_MIXED_ONLY_PASS.sh",\
-"'$JAVA_1_7'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3,$4"\n""sleep 3s"}'
+"'$JAVA_1_8'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3,$4"\n""sleep 3s"}'
 
 ## SUBSET TO SAMPLE VCF ALL SITES ON TARGET##
 
@@ -334,7 +331,7 @@ awk 'BEGIN {OFS="\t"} {print $1,$8,$12,$16}' \
 "-hold_jid","P.01_VARIANT_ANNOTATOR_"$1,\
 "-o","'$CORE_PATH'/"$1"/LOGS/"$2"_"$1".FILTER_TO_ALL_SITES_TARGET.log",\
 "'$SCRIPT_DIR'""/S.15_FILTER_TO_SAMPLE_ALL_SITES_TARGET.sh",\
-"'$JAVA_1_7'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3,$4"\n""sleep 3s"}'
+"'$JAVA_1_8'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3,$4"\n""sleep 3s"}'
 
 # ## SUBSET TO SAMPLE VARIANTS ONLY ON TARGET
 # 
@@ -346,7 +343,7 @@ awk 'BEGIN {OFS="\t"} {print $1,$8,$12,$16}' \
 # "-hold_jid","P.01_VARIANT_ANNOTATOR_"$1,\
 # "-o","'$CORE_PATH'/"$1"/LOGS/"$2"_"$1".FILTER_TO_VARIANTS_TARGET.log",\
 # "'$SCRIPT_DIR'""/S.16_FILTER_TO_SAMPLE_VARIANTS_TARGET.sh",\
-# "'$JAVA_1_7'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3,$4"\n""sleep 3s"}'
+# "'$JAVA_1_8'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3,$4"\n""sleep 3s"}'
 # 
 # ## SUBSET TO SAMPLE PASSING VARIANTS ON TARGET
 # 
@@ -358,7 +355,7 @@ awk 'BEGIN {OFS="\t"} {print $1,$8,$12,$16}' \
 # "-hold_jid","P.01_VARIANT_ANNOTATOR_"$1,\
 # "-o","'$CORE_PATH'/"$1"/LOGS/"$2"_"$1".FILTER_TO_VARIANTS_PASS_TARGET.log",\
 # "'$SCRIPT_DIR'""/S.17_FILTER_TO_SAMPLE_VARIANTS_PASS_TARGET.sh",\
-# "'$JAVA_1_7'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3,$4"\n""sleep 3s"}'
+# "'$JAVA_1_8'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3,$4"\n""sleep 3s"}'
 
 ### TITV SECTION ###
 
@@ -372,7 +369,7 @@ awk 'BEGIN {OFS="\t"} {print $1,$8,$12,$14}' \
 "-hold_jid","S.09_FILTER_TO_SNV_ONLY_PASS_"$2"_"$1,\
 "-o","'$CORE_PATH'/"$1"/LOGS/"$2"_"$1".FILTER_TO_TITV_VCF.log",\
 "'$SCRIPT_DIR'""/S.09-A.01_FILTER_TO_SAMPLE_TITV_VCF.sh",\
-"'$JAVA_1_7'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3,$4"\n""sleep 3s"}'
+"'$JAVA_1_8'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3,$4"\n""sleep 3s"}'
 
 # BREAK DOWN TO ALL PASSING SNV THAT FALL IN TITV BED FILE AND OVERLAP WITH DBSNP 129
 
@@ -384,7 +381,7 @@ awk 'BEGIN {OFS="\t"} {print $1,$8,$12,$14}' \
 "-hold_jid","S.09_FILTER_TO_SNV_ONLY_PASS_"$2"_"$1,\
 "-o","'$CORE_PATH'/"$1"/LOGS/"$2"_"$1".FILTER_TO_TITV_VCF_KNOWN.log",\
 "'$SCRIPT_DIR'""/S.09-A.02_FILTER_TO_SAMPLE_TITV_VCF_KNOWN.sh",\
-"'$JAVA_1_7'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3,$4"\n""sleep 3s"}'
+"'$JAVA_1_8'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3,$4"\n""sleep 3s"}'
 
 # BREAK DOWN TO ALL PASSING SNV THAT FALL IN TITV BED FILE AND DO NOT OVERLAP WITH DBSNP 129
 
@@ -396,7 +393,7 @@ awk 'BEGIN {OFS="\t"} {print $1,$8,$12,$14}' \
 "-hold_jid","S.09_FILTER_TO_SNV_ONLY_PASS_"$2"_"$1,\
 "-o","'$CORE_PATH'/"$1"/LOGS/"$2"_"$1".FILTER_TO_TITV_VCF_NOVEL.log",\
 "'$SCRIPT_DIR'""/S.09-A.03_FILTER_TO_SAMPLE_TITV_VCF_NOVEL.sh",\
-"'$JAVA_1_7'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3,$4"\n""sleep 3s"}'
+"'$JAVA_1_8'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3,$4"\n""sleep 3s"}'
 
 ### RUN TITV FOR THE PASSING SNVS THAT FALL IN UCSC CODING REGIONS THAT TOUCH EITHER THE BED OR TARGET FILE
 
@@ -450,7 +447,7 @@ awk 'BEGIN {OFS="\t"} {print $1,$12}' \
 "-hold_jid","P.01_VARIANT_ANNOTATOR_"$1,\
 "-o","'$CORE_PATH'/"$1"/LOGS/"$1".VARIANT_TO_TABLE_COHORT_ALL_SITES.log",\
 "'$SCRIPT_DIR'""/S.18_VARIANT_TO_TABLE_COHORT_ALL_SITES.sh",\
-"'$JAVA_1_7'","'$GATK_DIR'","'$CORE_PATH'",$1,$2"\n""sleep 1s"}'
+"'$JAVA_1_8'","'$GATK_DIR'","'$CORE_PATH'",$1,$2"\n""sleep 1s"}'
 
 ## BGZIP INITIAL JOINT CALLED VCF TABLE##
 
@@ -488,7 +485,7 @@ awk 'BEGIN {OFS="\t"} {print $1,$8,$12}' \
 "-hold_jid","S.06_FILTER_TO_SAMPLE_ALL_SITES_"$2"_"$1,\
 "-o","'$CORE_PATH'/"$1"/LOGS/"$2"_"$1".VARIANT_TO_TABLE_SAMPLE_ALL_SITES.log",\
 "'$SCRIPT_DIR'""/S.06-A.01_VARIANT_TO_TABLE_SAMPLE_ALL_SITES.sh",\
-"'$JAVA_1_7'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3"\n""sleep 1s"}'
+"'$JAVA_1_8'","'$GATK_DIR'","'$CORE_PATH'",$1,$2,$3"\n""sleep 1s"}'
 
 ## BGZIP SAMPLE ONLY VCF TABLE##
 

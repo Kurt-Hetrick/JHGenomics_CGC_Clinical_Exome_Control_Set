@@ -25,7 +25,7 @@
 
 set
 
-JAVA_1_7=$1
+JAVA_1_8=$1
 GATK_DIR=$2
 CORE_PATH=$3
 PED_FILE=$4
@@ -36,7 +36,7 @@ REF_GENOME=$6
 
 START_ADD_MORE_ANNOTATION=`date '+%s'`
 
-$JAVA_1_7/java -jar $GATK_DIR/GenomeAnalysisTK.jar \
+$JAVA_1_8/java -jar $GATK_DIR/GenomeAnalysisTK.jar \
 -T VariantAnnotator \
 -R $REF_GENOME \
 --disable_auto_index_creation_and_locking_when_reading_rods \
@@ -74,7 +74,7 @@ HOSTNAME=`hostname`
 echo $PROJECT",M.001,ADD_MORE_ANNOTATION,"$HOSTNAME","$START_ADD_MORE_ANNOTATION","$END_ADD_MORE_ANNOTATION \
 >> $CORE_PATH/$PROJECT/REPORTS/$PROJECT".WALL.CLOCK.TIMES.csv"
 
-echo $JAVA_1_7/java -jar $GATK_DIR/GenomeAnalysisTK.jar \
+echo $JAVA_1_8/java -jar $GATK_DIR/GenomeAnalysisTK.jar \
 -T VariantAnnotator \
 -R $REF_GENOME \
 --disable_auto_index_creation_and_locking_when_reading_rods \

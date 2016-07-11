@@ -25,7 +25,7 @@
 
 set
 
-JAVA_1_7=$1
+JAVA_1_8=$1
 PICARD_DIR=$2
 CORE_PATH=$3
 SAMTOOLS_DIR=$4
@@ -55,7 +55,7 @@ BAIT_NAME=`basename $BAIT_BED .bed`
 
 START_COLLECT_HS_METRICS=`date '+%s'`
 
-$JAVA_1_7/java -jar $PICARD_DIR/picard.jar CollectHsMetrics \
+$JAVA_1_8/java -jar $PICARD_DIR/picard.jar CollectHsMetrics \
 INPUT=$CORE_PATH/$PROJECT/BAM/$SM_TAG".bam" \
 OUTPUT=$CORE_PATH/$PROJECT/REPORTS/HYB_SELECTION/$SM_TAG"_hybridization_selection_metrics.txt" \
 PER_TARGET_COVERAGE=$CORE_PATH/$PROJECT/REPORTS/HYB_SELECTION/PER_TARGET_COVERAGE/$SM_TAG"_per_target_coverage.txt" \
@@ -74,7 +74,7 @@ HOSTNAME=`hostname`
 echo $SM_TAG"_"$PROJECT",H.001,COLLECT_HS_METRICS,"$HOSTNAME","$START_COLLECT_HS_METRICS","$END_COLLECT_HS_METRICS \
 >> $CORE_PATH/$PROJECT/REPORTS/$PROJECT".WALL.CLOCK.TIMES.csv"
 
-echo $JAVA_1_7/java -jar $PICARD_DIR/picard.jar CollectHsMetrics \
+echo $JAVA_1_8/java -jar $PICARD_DIR/picard.jar CollectHsMetrics \
 INPUT=$CORE_PATH/$PROJECT/BAM/$SM_TAG".bam" \
 OUTPUT=$CORE_PATH/$PROJECT/REPORTS/HYB_SELECTION/$SM_TAG"_hybridization_selection_metrics.txt" \
 PER_TARGET_COVERAGE=$CORE_PATH/$PROJECT/REPORTS/HYB_SELECTION/PER_TARGET_COVERAGE/$SM_TAG"_per_target_coverage.txt" \
