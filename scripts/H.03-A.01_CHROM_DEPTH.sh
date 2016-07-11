@@ -80,7 +80,7 @@ sed 's/^chr//g' $CYTOBAND_BED \
 
 awk 'BEGIN {FS=","};{OFS="\t"} $1~"-" {split($1,CHROM,":"); split(CHROM[2],POS,"-"); \
 print CHROM[1],POS[1]-1,POS[2],$2}' \
-$CORE_PATH/$PROJECT/REPORTS/DEPTH_OF_COVERAGE/TARGET/$SM_TAG".TARGET.BED.sample_interval_summary.csv" \
+$CORE_PATH/$PROJECT/REPORTS/DEPTH_OF_COVERAGE/UCSC_CODING_PLUS_10bp/$SM_TAG".ALL_UCSC_CODING_10bpFlanks.csv" \
 | $BEDTOOLS_DIR/bedtools intersect -wo -a - -b $CORE_PATH/$PROJECT/TEMP/$SM_TAG".CHROM_ARM.bed" \
 | awk 'BEGIN {OFS="\t"} {if ($1=="X"&&$2<=2699520) print "'$SM_TAG'","X.PAR",$8,$4,$9 ; \
 else if ($1=="X"&&$2>=154931044) print "'$SM_TAG'","X.PAR",$8,$4,$9 ; \
@@ -104,6 +104,9 @@ $CORE_PATH/$PROJECT/TEMP/$SM_TAG".depth_per_chr_arm.txt" \
 awk 'BEGIN {print "SM_TAG","CHROM","ARM","TOTAL_COVERAGE","TOTAL_TARGETS","MEAN_DEPTH","NORM_DEPTH"} \
 {print $1,$2,$3,$4,$5,$4/$5,$4/$5/"'$AUTOSOMAL_MEAN_DEPTH'"}' \
 $CORE_PATH/$PROJECT/TEMP/$SM_TAG".depth_per_chr_arm.txt" \
+| awk '$2!="21"||$3!="p" {print $0}' \
+| awk '$2!="X.PAR"||$3!="p" {print $0}' \
+| awk '$2!="X.PAR"||$3!="q" {print $0}' \
 | sed 's/ /\t/g' \
 >| $CORE_PATH/$PROJECT/REPORTS/ANEUPLOIDY_CHECK/$SM_TAG".chrom_count_report.txt"
 

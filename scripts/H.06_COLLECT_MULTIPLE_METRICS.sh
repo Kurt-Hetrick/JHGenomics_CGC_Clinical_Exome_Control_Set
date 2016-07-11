@@ -34,15 +34,15 @@ PROJECT=$5
 SM_TAG=$6
 REF_GENOME=$7
 DBSNP=$8
-TARGET_BED=$9
+TI_TV_BED=$9
 
 # blah, blah, blah
 
 # Create a picard style target bed file. This is used for CollectSequencingArtifactMetrics...it should not be used for anything else...i think
 
 ($SAMTOOLS_DIR/samtools view -H $CORE_PATH/$PROJECT/BAM/$SM_TAG".bam" \
-| grep "@SQ" ; sed 's/\r//g' $TARGET_BED | awk '{print $1,($2+1),$3,"+",$1"_"($2+1)"_"$3}' | sed 's/ /\t/g') \
->| $CORE_PATH/$PROJECT/TEMP/$SM_TAG".OnTarget.picard_2.bed"
+| grep "@SQ" ; sed 's/\r//g' $TI_TV_BED | awk '{print $1,($2+1),$3,"+",$1"_"($2+1)"_"$3}' | sed 's/ /\t/g') \
+>| $CORE_PATH/$PROJECT/TEMP/$SM_TAG".OnTiTv.picard_2.bed"
 
 START_COLLECT_MULTIPLE_METRICS=`date '+%s'`
 
@@ -52,7 +52,7 @@ INPUT=$CORE_PATH/$PROJECT/BAM/$SM_TAG".bam" \
 OUTPUT=$CORE_PATH/$PROJECT/TEMP/$SM_TAG \
 REFERENCE_SEQUENCE=$REF_GENOME \
 DB_SNP=$DBSNP \
-INTERVALS=$CORE_PATH/$PROJECT/TEMP/$SM_TAG".OnTarget.picard_2.bed" \
+INTERVALS=$CORE_PATH/$PROJECT/TEMP/$SM_TAG".OnTiTv.picard_2.bed" \
 PROGRAM=CollectGcBiasMetrics \
 PROGRAM=CollectSequencingArtifactMetrics
 
@@ -69,7 +69,7 @@ INPUT=$CORE_PATH/$PROJECT/BAM/$SM_TAG".bam" \
 OUTPUT=$CORE_PATH/$PROJECT/TEMP/$SM_TAG \
 REFERENCE_SEQUENCE=$REF_GENOME \
 DB_SNP=$DBSNP \
-INTERVALS=$CORE_PATH/$PROJECT/TEMP/$SM_TAG".OnTarget.picard_2.bed" \
+INTERVALS=$CORE_PATH/$PROJECT/TEMP/$SM_TAG".OnTiTv.picard_2.bed" \
 PROGRAM=CollectGcBiasMetrics \
 PROGRAM=CollectSequencingArtifactMetrics \
 >> $CORE_PATH/$PROJECT/COMMAND_LINES/$SM_TAG".COMMAND.LINES.txt"

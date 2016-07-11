@@ -258,6 +258,19 @@ print "qsub","-N","H.03_DOC_CODING_10bpFLANKS_"$2"_"$1,\
 "'$SCRIPT_DIR'""/H.03_DOC_CODING_10bpFLANKS.sh",\
 "'$JAVA_1_8'","'$GATK_DIR'","'$CORE_PATH'","'$CODING_BED'","'$GENE_LIST'",$1,$2,$3"\n""sleep 1s"}'
 
+# RUN ANEUPLOIDY_CHECK AFTER DOC TARGET BED FINISHES
+
+awk 'BEGIN {OFS="\t"} {print $1,$8}' \
+~/CGC_PIPELINE_TEMP/$MANIFEST_PREFIX.$PED_PREFIX.join.txt \
+| sort -k 1 -k 2 \
+| uniq \
+| awk '{split($2,smtag,"[@-]"); \
+print "qsub","-N","H.03-A.01_DOC_CHROM_DEPTH_"$2"_"$1,\
+"-hold_jid","H.03_DOC_CODING_10bpFLANKS_"$2"_"$1,\
+"-o","'$CORE_PATH'/"$1"/LOGS/"$2"_"$1".ANEUPLOIDY_CHECK.log",\
+"'$SCRIPT_DIR'""/H.03-A.01_CHROM_DEPTH.sh",\
+"'$CORE_PATH'","'$CYTOBAND_BED'","'$DATAMASH_DIR'","'$BEDTOOLS_DIR'",$1,$2"\n""sleep 1s"}'
+
 # RUN DOC TARGET BED
 
 awk 'BEGIN {OFS="\t"} {print $1,$8,$12,$16}' \
@@ -271,22 +284,9 @@ print "qsub","-N","H.05_DOC_TARGET_BED_"$2"_"$1,\
 "'$SCRIPT_DIR'""/H.05_DOC_TARGET_BED.sh",\
 "'$JAVA_1_8'","'$GATK_DIR'","'$CORE_PATH'","'$GENE_LIST'",$1,$2,$3,$4"\n""sleep 1s"}'
 
-# RUN ANEUPLOIDY_CHECK AFTER DOC TARGET BED FINISHES
-
-awk 'BEGIN {OFS="\t"} {print $1,$8}' \
-~/CGC_PIPELINE_TEMP/$MANIFEST_PREFIX.$PED_PREFIX.join.txt \
-| sort -k 1 -k 2 \
-| uniq \
-| awk '{split($2,smtag,"[@-]"); \
-print "qsub","-N","H.05-A.01_DOC_CHROM_DEPTH_"$2"_"$1,\
-"-hold_jid","H.05_DOC_TARGET_BED_"$2"_"$1,\
-"-o","'$CORE_PATH'/"$1"/LOGS/"$2"_"$1".ANEUPLOIDY_CHECK.log",\
-"'$SCRIPT_DIR'""/H.05-A.01_CHROM_DEPTH.sh",\
-"'$CORE_PATH'","'$CYTOBAND_BED'","'$DATAMASH_DIR'","'$BEDTOOLS_DIR'",$1,$2"\n""sleep 1s"}'
-
 # RUN COLLECT MULTIPLE METRICS
 
-awk 'BEGIN {OFS="\t"} {print $1,$8,$12,$17,$16}' \
+awk 'BEGIN {OFS="\t"} {print $1,$8,$12,$17,$14}' \
 ~/CGC_PIPELINE_TEMP/$MANIFEST_PREFIX.$PED_PREFIX.join.txt \
 | sort -k 1 -k 2 \
 | uniq \
@@ -312,7 +312,7 @@ print "qsub","-N","H.07_COLLECT_HS_METRICS_"$2"_"$1,\
 
 # RUN SELECT VERIFYBAM ID VCF
 
-awk 'BEGIN {OFS="\t"} {print $1,$8,$12,$16}' \
+awk 'BEGIN {OFS="\t"} {print $1,$8,$12,$14}' \
 ~/CGC_PIPELINE_TEMP/$MANIFEST_PREFIX.$PED_PREFIX.join.txt \
 | sort -k 1 -k 2 \
 | uniq \
@@ -342,7 +342,7 @@ print "qsub","-N","H.08-A.01_VERIFYBAMID_"$2"_"$1,\
 
 CREATE_SAMPLE_INFO_ARRAY_VERIFY_BAM ()
 {
-SAMPLE_INFO_ARRAY_VERIFY_BAM=(`awk '$8=="'$SAMPLE'" {print $1,$19,$8,$12,$16}' ~/CGC_PIPELINE_TEMP/$MANIFEST_PREFIX.$PED_PREFIX.join.txt`)
+SAMPLE_INFO_ARRAY_VERIFY_BAM=(`awk '$8=="'$SAMPLE'" {print $1,$19,$8,$12,$14}' ~/CGC_PIPELINE_TEMP/$MANIFEST_PREFIX.$PED_PREFIX.join.txt`)
 }
 
 CALL_SELECT_VERIFY_BAM ()

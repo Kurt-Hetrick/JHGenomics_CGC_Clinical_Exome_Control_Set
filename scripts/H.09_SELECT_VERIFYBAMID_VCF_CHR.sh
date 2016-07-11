@@ -33,7 +33,7 @@ VERIFY_VCF=$4
 PROJECT=$5
 SM_TAG=$6
 REF_GENOME=$7
-TARGET_BED=$8
+TI_TV_BED=$8
 CHROMOSOME=$9
 
 START_SELECT_VERIFYBAMID_VCF=`date '+%s'`
@@ -42,7 +42,7 @@ $JAVA_1_8/java -jar $GATK_DIR/GenomeAnalysisTK.jar \
 -T SelectVariants \
 -R $REF_GENOME \
 --variant $VERIFY_VCF \
--L $TARGET_BED \
+-L $TI_TV_BED \
 -L $CHROMOSOME \
 -XL X \
 -XL Y \
@@ -60,7 +60,7 @@ echo $JAVA_1_8/java -jar $GATK_DIR/GenomeAnalysisTK.jar \
 -T SelectVariants \
 -R $REF_GENOME \
 --variant $VERIFY_VCF \
--L $TARGET_BED \
+-L $TI_TV_BED \
 -L $CHROMOSOME \
 -XL X \
 -XL Y \

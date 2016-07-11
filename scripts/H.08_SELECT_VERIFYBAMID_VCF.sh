@@ -33,7 +33,7 @@ VERIFY_VCF=$4
 PROJECT=$5
 SM_TAG=$6
 REF_GENOME=$7
-TARGET_BED=$8
+TI_TV_BED=$8
 
 RIS_ID=${SM_TAG%@*}
 BARCODE_2D=${SM_TAG#*@}
@@ -47,7 +47,7 @@ $JAVA_1_8/java -jar $GATK_DIR/GenomeAnalysisTK.jar \
 -T SelectVariants \
 -R $REF_GENOME \
 --variant $VERIFY_VCF \
--L $TARGET_BED \
+-L $TI_TV_BED \
 -XL X \
 -XL Y \
 -o $CORE_PATH/$PROJECT/TEMP/$SM_TAG".VerifyBamID.vcf"
@@ -63,7 +63,7 @@ echo $JAVA_1_8/java -jar $GATK_DIR/GenomeAnalysisTK.jar \
 -T SelectVariants \
 -R $REF_GENOME \
 --variant $VERIFY_VCF \
--L $TARGET_BED \
+-L $TI_TV_BED \
 -XL X \
 -XL Y \
 -o $CORE_PATH/$PROJECT/TEMP/$SM_TAG".VerifyBamID.vcf" \
