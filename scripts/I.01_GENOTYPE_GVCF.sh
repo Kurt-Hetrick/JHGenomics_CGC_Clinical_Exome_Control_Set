@@ -36,7 +36,7 @@ DBSNP=$6
 RIS_ID=${SM_TAG%@*}
 BARCODE_2D=${SM_TAG#*@}
 
-CONTROL_REPO="/isilon/sequencing/Seq_Proj/CGC_CONTROL_DATA_SET"
+CONTROL_REPO="/isilon/sequencing/Seq_Proj/CGC_CONTROL_DATA_SET_3_6"
 
 START_GENOTYPE_GVCF=`date '+%s'`
 
